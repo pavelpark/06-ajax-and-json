@@ -47,12 +47,17 @@ Article.fetchAll = function() {
     1. We can process and load it,
     2. Then we can render the index page.  */
   } else {
+    $.getJSON('/data/blogArticles.json', function(data, message, xhr) {
+      // localStorage.setItem('blogArticles', data);
+      Article.loadAll(data);
+    });
     /* Without our localStorage in memory, we need to:
     1. Retrieve our JSON file with $.getJSON
       1.a Load our json data
       1.b Store that data in localStorage so that we can skip the server call next time,
       1.c And then render the index page.*/
   }
+  articleView.renderIndexPage();
 };
 
 
