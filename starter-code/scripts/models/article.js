@@ -43,22 +43,43 @@ Article.loadAll = function(inputData) {
 /* This function below will retrieve the data from either a local or remote
  source, process it, then hand off control to the View: */
 Article.fetchAll = function() {
-  if (localStorage.blogArticles) {
-    /* When our data is already in localStorage:
-    1. We can process and load it,
-    2. Then we can render the index page.  */
+  var loadFromLocal = function(){
     Article.loadAll(JSON.parse(localStorage.getItem('blogArticles')));
-  } else {
+  };
+  var loadFromJson = function(){
     $.getJSON('/data/blogArticles.json', function(data, message, xhr) {
+      localStorage.setItem('eTag', xhr.getResponseHeader('ETag'));
       localStorage.setItem('blogArticles', JSON.stringify(data));
       Article.loadAll(data);
     });
+  };
+
+
+  //localStorage.clear();
+  if (localStorage.blogArticles) {
+    var xhr = $.ajax(
+      {url: '/data/blogArticles.json',
+      type: 'HEAD',
+      success: function(){
+        if(xhr.getResponseHeader('ETag') === localStorage.getItem('eTag')){
+          loadFromLocal();
+        } else {
+          loadFromJson();
+        }
+      }
+    });
+  } else {
+    loadFromJson();
+  }
+    /* When our data is already in localStorage:
+    1. We can process and load it,
+    2. Then we can render the index page.  */
+
     /* Without our localStorage in memory, we need to:
     1. Retrieve our JSON file with $.getJSON
       1.a Load our json data
       1.b Store that data in localStorage so that we can skip the server call next time,
       1.c And then render the index page.*/
-  }
 };
 
 
