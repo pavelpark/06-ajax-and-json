@@ -55,6 +55,7 @@ articleView.setTeasers = function() {
 };
 
 articleView.renderIndexPage = function() {
+
   Article.allArticles.forEach(function(a){
     $('#articles').append(a.toHtml('#article-template'));
     if($('#category-filter option:contains("'+ a.category + '")').length === 0) {

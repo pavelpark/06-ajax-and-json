@@ -37,6 +37,7 @@ Article.loadAll = function(inputData) {
   .forEach(function(ele) {
     Article.allArticles.push(new Article(ele));
   });
+  articleView.renderIndexPage();
 };
 
 /* This function below will retrieve the data from either a local or remote
@@ -46,9 +47,10 @@ Article.fetchAll = function() {
     /* When our data is already in localStorage:
     1. We can process and load it,
     2. Then we can render the index page.  */
+    Article.loadAll(JSON.parse(localStorage.getItem('blogArticles')));
   } else {
     $.getJSON('/data/blogArticles.json', function(data, message, xhr) {
-      // localStorage.setItem('blogArticles', data);
+      localStorage.setItem('blogArticles', JSON.stringify(data));
       Article.loadAll(data);
     });
     /* Without our localStorage in memory, we need to:
@@ -57,7 +59,6 @@ Article.fetchAll = function() {
       1.b Store that data in localStorage so that we can skip the server call next time,
       1.c And then render the index page.*/
   }
-  articleView.renderIndexPage();
 };
 
 
