@@ -54,8 +54,6 @@ Article.fetchAll = function() {
     });
   };
 
-
-  //localStorage.clear();
   if (localStorage.blogArticles) {
     var xhr = $.ajax(
       {url: '/data/blogArticles.json',
