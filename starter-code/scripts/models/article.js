@@ -43,10 +43,10 @@ Article.loadAll = function(inputData) {
 /* This function below will retrieve the data from either a local or remote
  source, process it, then hand off control to the View: */
 Article.fetchAll = function() {
-  var loadFromLocal = function(){
+  function loadFromLocal(){
     Article.loadAll(JSON.parse(localStorage.getItem('blogArticles')));
   };
-  var loadFromJson = function(){
+  function loadFromJson(){
     $.getJSON('/data/blogArticles.json', function(data, message, xhr) {
       localStorage.setItem('eTag', xhr.getResponseHeader('ETag'));
       localStorage.setItem('blogArticles', JSON.stringify(data));
